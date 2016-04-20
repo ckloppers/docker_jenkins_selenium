@@ -1,3 +1,4 @@
+## Jenkins
 jenkins:
   build: ./jenkins
   ports:
@@ -6,6 +7,7 @@ jenkins:
     - /var/run/docker.sock:/var/run/docker.sock
     - /usr/local/bin/docker:/usr/bin/docker
 
+## Selenium Grid (HUB) with two nodes (chrome and firefox)
 seleniumhub:
   image: selenium/hub
   ports:
@@ -25,4 +27,12 @@ firefoxnode:
   links:
     - seleniumhub:hub  
 
-
+## ZAProxy - Headless    
+zaproxy:
+  image: owasp/zap2docker-stable
+  command: zap.sh -daemon -port 8090 -host 0.0.0.0
+  #expose:
+  # ZAP is running on 8090, we want it to be accessible by our tools        
+  #  - "8090"
+  ports:
+    - "18090:8090"    

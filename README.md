@@ -2,6 +2,10 @@ Docker compose
 ==============
 $ docker-compose up
 
+If you get issues with the xvfb not starting up for Chrome of Firefox nodes, use the force recreate flag
+
+$ docker-compose up --force-recreate
+
 To rebuild
 $ docker-compose up --build
 
