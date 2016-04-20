@@ -1,0 +1,28 @@
+jenkins:
+  build: ./jenkins
+  ports:
+    - "18080:8080"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /usr/local/bin/docker:/usr/bin/docker
+
+seleniumhub:
+  image: selenium/hub
+  ports:
+    - 4444:4444 
+
+chromenode:
+  image: selenium/node-chrome
+  ports:
+    - 5900
+  links:
+    - seleniumhub:hub
+    
+firefoxnode:
+  image: selenium/node-firefox
+  ports:
+    - 5900
+  links:
+    - seleniumhub:hub  
+
+
