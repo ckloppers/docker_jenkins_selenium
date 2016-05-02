@@ -30,7 +30,7 @@ firefoxnode:
 ## ZAProxy - Headless    
 zaproxy:
   image: owasp/zap2docker-stable
-  command: zap.sh -daemon -port 8090 -host 0.0.0.0
+  command: zap.sh -daemon -port 8090 -config api.disablekey=true -host 0.0.0.0
   #expose:
   # ZAP is running on 8090, we want it to be accessible by our tools        
   #  - "8090"
