@@ -41,3 +41,6 @@ $ docker-compose scale chromenode=3
 CLEAN UP Docker containers
 ==========================
 $ docker stop $(docker ps -a -q)
+
+
+For more info: ckloppers@planittesting.com
