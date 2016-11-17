@@ -1,38 +1,55 @@
 ## Jenkins
-jenkins:
-  build: ./jenkins
-  ports:
-    - "18080:8080"
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - /usr/local/bin/docker:/usr/bin/docker
+#jenkins:
+#  build: ./jenkins
+#  ports:
+#    - "18080:8080"
+#  volumes:
+#    - /var/run/docker.sock:/var/run/docker.sock
+#    - /usr/local/bin/docker:/usr/bin/docker
 
 ## Selenium Grid (HUB) with two nodes (chrome and firefox)
-seleniumhub:
-  image: selenium/hub
-  ports:
-    - 4444:4444 
+version: '2.0'
+services:
 
-chromenode:
-  image: selenium/node-chrome
-  ports:
-    - 5900
-  links:
-    - seleniumhub:hub
-    
-firefoxnode:
-  image: selenium/node-firefox
-  ports:
-    - 5900
-  links:
-    - seleniumhub:hub  
+  seleniumhub:
+    image: selenium/hub
+    ports:
+      - 4444:4444
 
-## ZAProxy - Headless    
-zaproxy:
-  image: owasp/zap2docker-stable
-  command: zap.sh -daemon -port 8090 -config api.disablekey=true -host 0.0.0.0
-  #expose:
-  # ZAP is running on 8090, we want it to be accessible by our tools        
-  #  - "8090"
-  ports:
-    - "18090:8090"    
+  chromenode:
+    # image: selenium/node-chrome
+    build:
+      context: ./selenium-node-chrome
+      args:
+        - host=hub
+        - port=4444
+    ports:
+      - 5900
+    links:
+      - seleniumhub:hub
+    depends_on:
+      - seleniumhub
+
+  firefoxnode:
+    # image: selenium/node-firefox
+    build:
+      context: ./selenium-node-firefox
+      args:
+        - host=hub
+        - port=4444
+    ports:
+      - 5900
+    links:
+      - seleniumhub:hub
+    depends_on:
+      - seleniumhub
+
+## ZAProxy - Headless
+# zaproxy:
+#   image: owasp/zap2docker-stable
+#   command: zap.sh -daemon -port 8090 -config api.disablekey=true -host 0.0.0.0
+#   #expose:
+#   # ZAP is running on 8090, we want it to be accessible by our tools
+#   #  - "8090"
+#   ports:
+#     - "18090:8090"
